@@ -19,6 +19,7 @@ import matplotlib.gridspec as gridspec
 import matplotlib.patches as mpatches
 from matplotlib.patches import Rectangle
 from scipy import stats
+
 mpl.rcParams['pdf.fonttype'] = 42
 mpl.rcParams['ps.fonttype'] = 42
 
@@ -88,19 +89,19 @@ class Plotting(object):
                                 "linewidth": self._linewidth_plot,
                                 "edgecolor": "black",
                                 "alpha": 1.,
-                                "zorder": 0,}
+                                "zorder": 0, }
 
         self._swarmplot_kwargs = {"linewidth": self._linewidth_markers,
                                   "s": self._size_markers,
                                   "edgecolor": "black",
                                   "alpha": 0.8,
-                                  "zorder": 1,}
+                                  "zorder": 1, }
 
         self._cumulativeplot_meanline_kwargs = {"lw": 0.8,
-                                                "alpha": 1,}
+                                                "alpha": 1, }
 
         self._cumulativeplot_stdline_kwargs = {"lw": 0.5,
-                                               "alpha": 0.2,}
+                                               "alpha": 0.2, }
 
         ######################################################################
         # Parameters for plot colors
@@ -217,32 +218,31 @@ class Plotting(object):
                     sink.append(k)
         return sink
 
-
     def display_significance(self, ax, pvals, combinations, y_max, y_min):
         y_range = abs(y_max - y_min)
         combinations = self.filter_pairs(combinations)
         heights = self.generate_height_from_combinations(combinations)
         for pval, x_pos, h in zip(pvals, combinations, heights):
-            y_pos_low = y_max + (y_range*0.1) * h
-            y_pos_high = y_max + (y_range*0.1) * h + (y_range*0.02)
-            y_pos_label = y_max + (y_range*0.1) * h + (y_range*0.025)
-            ax.plot([x_pos[0]+self._dist_sbars, x_pos[1]-self._dist_sbars],
-                     [y_pos_high, y_pos_high],
-                     color="black",
-                     lw=self._linewidth_plot)
-            ax.plot([x_pos[0]+self._dist_sbars, x_pos[0]+self._dist_sbars],
-                     [y_pos_low, y_pos_high],
-                     color="black",
-                     lw=self._linewidth_plot)
-            ax.plot([x_pos[1]-self._dist_sbars, x_pos[1]-self._dist_sbars],
-                     [y_pos_low, y_pos_high],
-                     color="black",
-                     lw=self._linewidth_plot)
+            y_pos_low = y_max + (y_range * 0.1) * h
+            y_pos_high = y_max + (y_range * 0.1) * h + (y_range * 0.02)
+            y_pos_label = y_max + (y_range * 0.1) * h + (y_range * 0.025)
+            ax.plot([x_pos[0] + self._dist_sbars, x_pos[1] - self._dist_sbars],
+                    [y_pos_high, y_pos_high],
+                    color="black",
+                    lw=self._linewidth_plot)
+            ax.plot([x_pos[0] + self._dist_sbars, x_pos[0] + self._dist_sbars],
+                    [y_pos_low, y_pos_high],
+                    color="black",
+                    lw=self._linewidth_plot)
+            ax.plot([x_pos[1] - self._dist_sbars, x_pos[1] - self._dist_sbars],
+                    [y_pos_low, y_pos_high],
+                    color="black",
+                    lw=self._linewidth_plot)
             ax.text((x_pos[0] + x_pos[1]) / 2,
-                     y_pos_label,
-                     self.stars_for_pvalue(pval),
-                     fontsize=self._fontsize_title,
-                     ha="center")
+                    y_pos_label,
+                    self.stars_for_pvalue(pval),
+                    fontsize=self._fontsize_title,
+                    ha="center")
 
     @staticmethod
     def is_nested_dict(source):
@@ -335,12 +335,12 @@ class Plotting(object):
                ax_y_data,
                yerr=ax_y_std,
                color=colors,
-               **self._barplot_kwargs,)
+               **self._barplot_kwargs, )
 
         sns.swarmplot(data=ax_dataframe,
                       ax=ax,
                       palette=colors,
-                      **self._swarmplot_kwargs,)
+                      **self._swarmplot_kwargs, )
 
         self.format_box_plot_graphics(ax, colors)
         ax.set_xticks(ax_x_data)
@@ -362,11 +362,12 @@ class Plotting(object):
         self.display_significance(ax, pvals, combinations, ax_y_max, ax_y_min)
 
     def plot_bar_plot(self, data, colors=None, x_label="x_label",
-                      y_label="y_label", figsize=(20, 10), dpi=300.):
+                      y_label="y_label", figsize=(20, 10), dpi=300.,
+                      combinations=None):
         plt.figure(figsize=(figsize[0] / self._cm_to_inch, figsize[1] / self._cm_to_inch),
                    dpi=dpi)
         ax0 = plt.subplot(1, 1, 1)
-        self.bar_plot(data, ax0, colors, x_label, y_label)
+        self.bar_plot(data, ax0, colors, x_label, y_label, combinations)
         plt.tight_layout()
         plt.show()
 
@@ -459,7 +460,7 @@ class Plotting(object):
 
     def complete_raster_plot(self, ax, data, behaviors):
         for behavior_name in behaviors:
-        # for behavior_name, behavior_data in data.items():
+            # for behavior_name, behavior_data in data.items():
             behavior_color = self.get_color_for_behavior(behavior_name)
             if not behavior_color is None:
                 for s, e in data[behavior_name]:
@@ -496,18 +497,18 @@ class Plotting(object):
                                 1,
                                 linewidth=0,
                                 edgecolor='black',
-                                facecolor=color,)
+                                facecolor=color, )
             else:
                 rec = Rectangle((0, 0),
                                 1,
                                 1,
                                 linewidth=0,
-                                edgecolor='black',)
+                                edgecolor='black', )
             legend_handles.append(rec)
             legend_labels.append(b)
         return legend_handles, legend_labels
 
-    def plot_raster_plot(self, data, behaviors, figsize=(50,30), dpi=300., limit=3600,
+    def plot_raster_plot(self, data, behaviors, figsize=(50, 30), dpi=300., limit=3600,
                          x_label="x_label"):
         is_group = any(isinstance(i, dict) for i in data.values())
         legend_handles, legend_labels = self.generate_legend_data_behaviors(behaviors)
@@ -562,11 +563,11 @@ class BehavioralDataAnimal(Plotting):
         self._animal_name = os.path.basename(self._animal_file_path).split(".")[0]
         self._dataframe_animal = self.load_behavior_as_dataframe(transpose=transpose)
         self._time_add_cotton = float(self.check_and_get_column_data(self._dataframe_animal,
-                                                               "tcotton").iloc[0])
+                                                                     "tcotton").iloc[0])
         self._general_initiation_time = float(self.check_and_get_column_data(self._dataframe_animal,
-                                                                       "tinitiate").iloc[0])
+                                                                             "tinitiate").iloc[0])
         self._time_video_ends = float(self.check_and_get_column_data(self._dataframe_animal,
-                                                               "videoend").iloc[0])
+                                                                     "videoend").iloc[0])
         self._behavior_names = self.get_behaviors_from_dataframe()
         self._behavior_data = self.get_complete_behavior_data_from_source()
 
@@ -593,7 +594,7 @@ class BehavioralDataAnimal(Plotting):
         :return: The names of the different behaviors segmented for this animal
         """
         keys = self._dataframe_animal.keys()
-        behavioral_names = [i.split("tstart")[-1] for i in keys\
+        behavioral_names = [i.split("tstart")[-1] for i in keys \
                             if i.startswith("tstart")]
         return behavioral_names
 
@@ -636,25 +637,41 @@ class BehavioralDataAnimal(Plotting):
             behavioral_data[b] = data
         return behavioral_data
 
-    def get_single_behavior_data(self, behavior):
+    def get_single_behavior_data(self, behavior, time_limit=3600, init_type=None, behavior_init=None):
         """
         Method to extract the data of a single behavior from within the class instance
 
         :param str behavior: The behavior to be extracted
         :return: The data for the specified behavior
+        :param int time_limit: The time limit of data to be extracted
+        :param string init_type: The type of initiation to be used
+        :param string behavior_init: If init_type is 'specific': the behavior to be used to compute initiation
         """
         behavior_data = self.check_and_get_dict_entry(self._behavior_data, behavior,
                                                       animal_name=self._animal_name,
                                                       available_beh=self._behavior_names)
+        time_initiate = self.get_initiation_from_condition(init_type, behavior=behavior_init)
+        filtered_start_data, filtered_end_data = self.filter_start_end_bouts_in_time(behavior_data, time_initiate, time_limit)
+        behavior_data = np.column_stack((filtered_start_data, filtered_end_data))
         return behavior_data
 
-    def get_complete_behavior_data(self):
+    def get_complete_behavior_data(self, time_limit=3600, init_type=None, behavior_init=None):
         """
         Method to extract the data of all behaviors from within the class instance
 
+        :param int time_limit: The time limit of data to be extracted
+        :param string init_type: The type of initiation to be used
+        :param string behavior_init: If init_type is 'specific': the behavior to be used to compute initiation
         :return: The data for the all the behaviors
         """
-        return self._behavior_data
+        complete_behavior_data = {}
+        time_initiate = self.get_initiation_from_condition(init_type, behavior=behavior_init)
+        for behavior_name, behavior_data in self._behavior_data.items():
+            filtered_start_data, filtered_end_data = self.filter_start_end_bouts_in_time(behavior_data, time_initiate,
+                                                                                         time_limit)
+            behavior_data = np.column_stack((filtered_start_data, filtered_end_data))
+            complete_behavior_data[behavior_name] = behavior_data
+        return complete_behavior_data
 
     def combine_behaviors(self, behaviors_to_combine, sink_dict_key):
         """
@@ -721,8 +738,8 @@ class BehavioralDataAnimal(Plotting):
         :return: The cumulative data
         """
         behavioral_data = self.get_single_behavior_data(behavior)
-        initiation_data = self.get_initiation_from_condition(behavior_init, behavior=behavior)
-        return self.transform_start_end_to_cumulative(behavioral_data, initiation_data, time_limit)
+        time_initiate = self.get_initiation_from_condition(behavior_init, behavior=behavior)
+        return self.transform_start_end_to_cumulative(behavioral_data, time_initiate, time_limit)
 
     def transform_start_end_to_cumulative(self, behavioral_data, time_initiate, time_limit):
         """
@@ -746,21 +763,21 @@ class BehavioralDataAnimal(Plotting):
         for i in range(len(filtered_start_data)):
             if i < len(filtered_start_data) - 1:
                 diff_0 = int(filtered_end_data[i]) - int(filtered_start_data[i])
-                cumulative_time_data_no_gap[int(filtered_start_data[i]):\
-                                            int(filtered_end_data[i] + 1)]\
+                cumulative_time_data_no_gap[int(filtered_start_data[i]): \
+                                            int(filtered_end_data[i] + 1)] \
                     = np.arange(cumulative_time_data[i] - diff_0,
                                 cumulative_time_data[i] + 1)
                 cumulative_time_data_no_gap[int(filtered_end_data[i]):
-                                            int(filtered_start_data[i + 1] + 1)]\
+                                            int(filtered_start_data[i + 1] + 1)] \
                     = cumulative_time_data[i]
             else:
                 diff_0 = int(filtered_end_data[i]) - int(filtered_start_data[i])
-                cumulative_time_data_no_gap[int(filtered_start_data[i]):\
-                                            int(filtered_end_data[i] + 1)]\
+                cumulative_time_data_no_gap[int(filtered_start_data[i]): \
+                                            int(filtered_end_data[i] + 1)] \
                     = np.arange(cumulative_time_data[i] - diff_0,
                                 cumulative_time_data[i] + 1)
-                cumulative_time_data_no_gap[int(filtered_end_data[i]):\
-                                            int(time_limit + 1)]\
+                cumulative_time_data_no_gap[int(filtered_end_data[i]): \
+                                            int(time_limit + 1)] \
                     = cumulative_time_data[i]
 
         behavioral_data = np.column_stack((time_data_no_gap, cumulative_time_data_no_gap))
@@ -810,12 +827,12 @@ class BehavioralDataAnimal(Plotting):
         target_order_values = np.arange(0, x_shape, 1)
         argsort_start = np.argsort(behavioral_data[:, 0])
         if not (argsort_start == target_order_values).all():
-            raise BehaviorException("ordering of start data is wrong in animal:"\
+            raise BehaviorException("ordering of start data is wrong in animal:" \
                                     "{} for behavior:{}" \
                                     .format(self._animal_name, behavior))
         argsort_end = np.argsort(behavioral_data[:, 1])
         if not (argsort_end == target_order_values).all():
-            raise BehaviorException("ordering of end data is wrong in animal:"\
+            raise BehaviorException("ordering of end data is wrong in animal:" \
                                     "{} for behavior:{}" \
                                     .format(self._animal_name, behavior))
 
@@ -864,17 +881,18 @@ class BehavioralDataAnimal(Plotting):
                 raise BehaviorException("no entry {} in df".format(key))
 
     @staticmethod
-    def check_and_get_dict_entry(dict, key, animal_name="", available_beh=""):
+    def check_and_get_dict_entry(dictionary, key, animal_name="", available_beh=""):
         """
         Static method to check if a key name exists in a dictionary and returns it
 
-        :param dict: The dictionary from which the entry has to be extracted
+        :param dict dictionary: The dictionary from which the entry has to be extracted
         :param key: Name of the key to be extracted
-        :param animal_name: [OPTIONAL] the name of the animal for debugging
+        :param string animal_name: [OPTIONAL] the name of the animal for debugging
+        :param list/string available_beh: [OPTIONAL] all the available behaviors for debugging
         :return: The data of the key in the dictionary
         """
-        if key in dict.keys():
-            return dict[key]
+        if key in dictionary.keys():
+            return dictionary[key]
         else:
             if animal_name:
                 raise BehaviorException("no entry {} for animal: {}."
@@ -925,13 +943,13 @@ class BehavioralDataAnimal(Plotting):
     @staticmethod
     def substract_initiation_time(start_data, end_data, initiation_time):
         """
-        Static method that substracts the initiation time to (start, end) data
+        Static method that subtracts the initiation time to (start, end) data
         (to put it back to zero)
 
         :param start_data: The start behavioral data
         :param end_data: The end behavioral data
         :param initiation_time: The initiation time
-        :return: The substracted (start, end) data
+        :return: The subtracted (start, end) data
         """
         start_data = start_data - initiation_time
         end_data = end_data - initiation_time
@@ -977,16 +995,21 @@ class BehavioralDataGroup(Plotting):
         for animal_data in self._animal_data.values():
             animal_data.combine_behaviors(behaviors_to_combine, sink_dict_key)
 
-    def get_all_behavior_data_for_group(self):
+    def get_complete_behavior_data_for_group(self, time_limit=3600, init_type=None, behavior_init=None):
         behavioral_data = {}
         for animal_name, animal_data in self._animal_data.items():
-            behavioral_data[animal_name] = animal_data.get_complete_behavior_data_from_source()
+            behavioral_data[animal_name] = animal_data.get_complete_behavior_data(time_limit=time_limit,
+                                                                                  init_type=init_type,
+                                                                                  behavior_init=behavior_init)
         return behavioral_data
 
-    def get_single_behavioral_data_for_group(self, behavior):
+    def get_single_behavioral_data_for_group(self, behavior, time_limit=3600, init_type=None, behavior_init=None):
         behavioral_data = {}
         for animal_name, animal_data in self._animal_data.items():
-            behavioral_data[animal_name] = animal_data.get_single_behavior_data_from_source(behavior)
+            behavioral_data[animal_name] = animal_data.get_single_behavior_data(behavior,
+                                                                                time_limit=time_limit,
+                                                                                init_type=init_type,
+                                                                                behavior_init=behavior_init)
         return behavioral_data
 
     def get_general_initiation_data_for_group(self):
@@ -1008,22 +1031,6 @@ class BehavioralDataGroup(Plotting):
                                                                                   time_limit=time_limit,
                                                                                   behavior_init=behavior_init)
         return cumulative_data
-
-    def get_all_start_end_data_group(self, init_behavior, time_limit=3600, behavior_init=None):
-        start_end_data = {}
-        for animal_name, animal_data in self._animal_data.items():
-            start_end_data[animal_name] = animal_data.get_all_start_end_data_animal(init_behavior,
-                                                                                    time_limit=time_limit,
-                                                                                    behavior_init=behavior_init)
-        return start_end_data
-
-    def get_specific_start_end_data_group(self, init_behavior, time_limit=3600, behavior_init=None):
-        start_end_data = {}
-        for animal_name, animal_data in self._animal_data.items():
-            start_end_data[animal_name] = animal_data.get_specific_start_end_data_animal(init_behavior,
-                                                                                         time_limit=time_limit,
-                                                                                         behavior_init=behavior_init)
-        return start_end_data
 
     def get_behavior_names_group(self):
         behaviors = []
@@ -1050,16 +1057,21 @@ class BehavioralDataGroups(Plotting):
             self._behavior_names.append(sink_dict_key)
         print("\nAdded {} entry to _behavioral_data attr".format(sink_dict_key))
 
-    def get_all_behavior_data_for_groups(self):
+    def get_complete_behavior_data_for_groups(self, time_limit=3600, init_type=None, behavior_init=None):
         behavioral_data = {}
         for group_name, group_data in self._group_data.items():
-            behavioral_data[group_name] = group_data.get_all_behavior_data_for_group()
+            behavioral_data[group_name] = group_data.get_complete_behavior_data_for_group(time_limit=time_limit,
+                                                                                          init_type=init_type,
+                                                                                          behavior_init=behavior_init)
         return behavioral_data
 
-    def get_single_behavior_data_for_groups(self, behavior):
+    def get_single_behavior_data_for_groups(self, behavior, time_limit=3600, init_type=None, behavior_init=None):
         behavioral_data = {}
         for group_name, group_data in self._group_data.items():
-            behavioral_data[group_name] = group_data.get_single_behavioral_data_for_group(behavior)
+            behavioral_data[group_name] = group_data.get_single_behavioral_data_for_group(behavior,
+                                                                                          time_limit=time_limit,
+                                                                                          init_type=init_type,
+                                                                                          behavior_init=behavior_init)
         return behavioral_data
 
     def get_general_initiation_data_groups(self):
@@ -1078,13 +1090,13 @@ class BehavioralDataGroups(Plotting):
         cumulative_data = {}
         for group_name, group_data in self._group_data.items():
             cumulative_data[group_name] = group_data.get_cumulative_data_group(behavior,
-                                                                                 time_limit=3600,
-                                                                                 behavior_init=behavior_init)
+                                                                               time_limit=3600,
+                                                                               behavior_init=behavior_init)
         return cumulative_data
 
     def get_all_start_end_data_groups(self, init_behavior, time_limit=3600, behavior_init=None):
         default = False
-        behavioral_data = self.get_all_behavioral_data_groups()
+        behavioral_data = self.get_complete_behavior_data_for_groups()
         if behavior_init == "specific":
             initiation_data = self.get_specific_initiation_data_groups(init_behavior)
         elif behavior_init == "general":

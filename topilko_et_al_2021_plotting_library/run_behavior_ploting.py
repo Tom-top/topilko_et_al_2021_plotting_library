@@ -1,5 +1,5 @@
 import os
-import behavior_ploting as bp
+import topilko_et_al_2021_plotting_library.behavior_ploting as bp
 
 all_groups = {"fPregnant": [6,9,13,14,24,28],
               "fPseudo": [4,10,11,15,23,27],
@@ -15,9 +15,7 @@ metadata_groups = {"fPregnant": ["#f97c7c", "Pregnant \u2640"],
                    "mVirgin": ["#03c03c", "Virgin \u2642"],
                    "fVirginPup": ["#779ecb", "Virgin \u2640 + pup"]}
 
-working_directory = "/network/lustre/dtlake01/renier/Thomas/thomas.topilko/Experiments"\
-                    "/Nesting_Project/Behavior/Virgin_Pregnant_Activity_Mapping_Females"\
-                    "/170424/plot_cumulative_behavior/data"
+working_directory = "/Users/tomtop/Desktop/FIGURES_DO_NOT_DELETE"
 print(os.path.exists(working_directory))
 
 group_names = ("fVirgin", "fPseudo", "fPregnant", "mMated")
@@ -36,46 +34,47 @@ ax1_data = behavior_data_groups.get_cumulative_data_groups(behavior_to_test,
                                                            behavior_init=None)
 ax2_data = behavior_data_groups.get_total_time_behaving_from_cumulative_data(ax1_data)
 
-# figsize = (30, 30)
-# y_label = "Time spent {}".format(behavioral_label)
-# behavior_data_groups.plot_box_plot(ax0_data,
-#                                    colors=group_colors,
-#                                    x_label=group_labels,
-#                                    y_label=y_label,
-#                                    figsize=figsize,
-#                                    dpi=300.)
+figsize = (30, 30)
+y_label = "Time spent {}".format(behavioral_label)
+combinations = [[0,1]]
+behavior_data_groups.plot_bar_plot(ax0_data,
+                                   colors=group_colors,
+                                   x_label=group_labels,
+                                   y_label=y_label,
+                                   figsize=figsize,
+                                   dpi=300.,
+                                   combinations=combinations)
 
-# x_label = "Time"
-# y_label = "Time spent {}".format(behavioral_label)
-# behavior_data_groups.plot_cumulative_plot(ax1_data,
-#                                      colors=group_colors,
-#                                      x_label=x_label,
-#                                      y_label=y_label,
-#                                      figsize=figsize,
-#                                      dpi=300.)
+x_label = "Time"
+y_label = "Time spent {}".format(behavioral_label)
+behavior_data_groups.plot_cumulative_plot(ax1_data,
+                                     colors=group_colors,
+                                     x_label=x_label,
+                                     y_label=y_label,
+                                     figsize=figsize,
+                                     dpi=300.)
 
 
-# plot_kwargs = {"colors": group_colors,
-#                "ax0_label": group_labels,
-#                "ay0_label": "Delay to initiate {}".format(behavioral_label),
-#                "ax1_label": "Time",
-#                "ay1_label": "Time spent {}".format(behavioral_label),
-#                "ax2_label": group_labels,
-#                "ay2_label": "Time spent {}".format(behavioral_label),
-#                "figsize": (100, 50),
-#                "dpi": 700.,
-#                "combinations": [[0, 1], [0, 2], [0, 3], [1, 2], [2, 3], [1, 3]],
-#                }
-#
-# behavior_data_groups.plot_complete_plot(ax0_data, ax1_data, ax2_data, **plot_kwargs)
+plot_kwargs = {"colors": group_colors,
+               "ax0_label": group_labels,
+               "ay0_label": "Delay to initiate {}".format(behavioral_label),
+               "ax1_label": "Time",
+               "ay1_label": "Time spent {}".format(behavioral_label),
+               "ax2_label": group_labels,
+               "ay2_label": "Time spent {}".format(behavioral_label),
+               "figsize": (100, 50),
+               "dpi": 700.,
+               "combinations": [[0, 1], [0, 2], [0, 3], [1, 2]],
+               }
 
-test_data = behavior_data_groups.get_all_start_end_data_groups(None,
-                                                               time_limit=1*3600,
-                                                               behavior_init="general")
+behavior_data_groups.plot_complete_plot(ax0_data, ax1_data, ax2_data, **plot_kwargs)
 
-test_data.combine_behaviors_for_groups(["nesting", "dig"], "global_nesting")
-test_data.combine_behaviors_for_groups(["drink", 'snifffood'], "other")
-print(test_data._behavior_names)
+behavior_data_groups.combine_behaviors_for_groups(["nesting", "dig"], "global_nesting")
+behavior_data_groups.combine_behaviors_for_groups(["drink", 'snifffood'], "other")
+test_data = behavior_data_groups.get_complete_behavior_data_for_groups(time_limit=1*3600,
+                                                                       init_type="general",
+                                                                       behavior_init=None)
+print(behavior_data_groups._behavior_names)
 
 behavior_color_map = {"global_nesting": "#f97c7c",
                       "sleep": "#84d9ff",
